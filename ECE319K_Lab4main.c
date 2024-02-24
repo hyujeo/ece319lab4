@@ -27,11 +27,32 @@ const char EID2[] = "JES7539"; //  ;replace abc123 with your EID
 // initialize 6 LED outputs and 3 switch inputs
 // assumes LaunchPad_Init resets and powers A and B
 void Traffic_Init(void){ // assumes LaunchPad_Init resets and powers A and B
-    // write this
+    // inputs
+    IOMUX->SECCFG.PINCM[PB15INDEX] = 0x00040081; // west sensor
+    IOMUX->SECCFG.PINCM[PB16INDEX] = 0x00040081; // south sensor
+    IOMUX->SECCFG.PINCM[PB17INDEX] = 0x00040081; // walk sensor
+    // outputs
+    IOMUX->SECCFG.PINCM[PB0INDEX] = 0x81; // PB0 output
+    IOMUX->SECCFG.PINCM[PB1INDEX] = 0x81; // PB1 output
+    IOMUX->SECCFG.PINCM[PB2INDEX] = 0x81; // PB2 output
+    IOMUX->SECCFG.PINCM[PB6INDEX] = 0x81; // PB6 output
+    IOMUX->SECCFG.PINCM[PB7INDEX] = 0x81; // PB7 output
+    IOMUX->SECCFG.PINCM[PB8INDEX] = 0x81; // PB8 output
+    // walk light
+    IOMUX->SECCFG.PINCM[PB22INDEX] = 0x81; // PB22 output
+    IOMUX->SECCFG.PINCM[PB26INDEX] = 0x81; // PB26 output
+    IOMUX->SECCFG.PINCM[PB27INDEX] = 0x81; // PB27 output
+
+    // enable outputs
+    GPIOB->DOE31_0 |= 1 | 2 | 4 | (1<<6) | (1<<7) | (1<<8) | (1<<22) | (1<<26) | (1<<27);
+
 }
+
 /* Activate LEDs
 * Inputs: data1,data2,data3
-*   specify what these means
+*   -data1: west sensor
+*   -data2: south sensor
+*   -data3: walk sensor
 * Output: none
 * Feel free to change this. But, if you change the way it works, change the test programs too
 * Be friendly*/
