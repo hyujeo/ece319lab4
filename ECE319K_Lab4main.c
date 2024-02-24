@@ -53,7 +53,7 @@ traffic_t FSM[12] = {
         {"allredS", 0x4000104, 1000,, {goW, goW, goS, goW, Walk, Walk, Walk, Walk}},
         {"allredW", 0x4000104, 1000, {goS, goW, goS, goS, Walk, Walk, Walk, goS}},
         {"allredWalk", 0x4000104, 1000, {goS, goW, goS, goS, Walk, goW, goS, goW}},
-        {"RWalk1", 0x4000104, 500,}, {OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1},
+        {"RWalk1", 0x4000104, 500, {OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1}},
         {"OffWalk1", 0x0000104, 500, {RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2}},
         {"RWalk2", 0x4000104, 500, {OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2}},
         {"OffWalk2", 0x0000104, 500 {allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk}}
@@ -83,14 +83,11 @@ void Traffic_Init(void){ // assumes LaunchPad_Init resets and powers A and B
 }
 
 /* Activate LEDs
-* Inputs: data1,data2,data3
-*   -data1: west sensor
-*   -data2: south sensor
-*   -data3: walk sensor
+* Inputs: sensorInput
 * Output: none
 * Feel free to change this. But, if you change the way it works, change the test programs too
 * Be friendly*/
-void Traffic_Out(uint32_t data1, uint32_t south, uint32_t walk){
+void Traffic_Out(uint32_t sensorInput){
     // write this
 
 }
