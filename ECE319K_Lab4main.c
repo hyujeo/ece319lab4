@@ -31,18 +31,18 @@ typedef struct traffic_t {
     uint32_t next[8];
 } traffic_t;
 
-#define goS 0;
-#define yellowS 1;
-#define Walk 2;
-#define goW 3;
-#define yellowW 4;
-#define allredS 5;
-#define allredW 6;
-#define allredWalk 7;
-#define RWalk1 8;
-#define OffWalk1 9;
-#define RWalk2 10;
-#define OffWalk2 11;
+#define goS 0
+#define yellowS 1
+#define Walk 2
+#define goW 3
+#define yellowW 4
+#define allredS 5
+#define allredW 6
+#define allredWalk 7
+#define RWalk1 8
+#define OffWalk1 9
+#define RWalk2 10
+#define OffWalk2 11
 traffic_t FSM[12] = {
         {0x4000101, 2000, {goS, yellowS, goS, yellowS, yellowS, yellowS, yellowS, yellowS}},
         {0x4000102, 1000, {allredS, allredS, allredS, allredS, allredS, allredS, allredS, allredS}},
