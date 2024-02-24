@@ -23,10 +23,9 @@ const char EID2[] = "JES7539"; //  ;replace abc123 with your EID
  * When all true: South, Walk, West, South....
  */
 
-uint32_t friendlyMask = 0xC4001C7  // 1's in all the output bits
+uint32_t friendlyMask = 0xC4001C7;  // 1's in all the output bits
 
 typedef struct traffic_t {
-    char name[10];
     uint32_t output;
     uint32_t wait; // ms
     uint32_t next[8];
@@ -45,18 +44,18 @@ typedef struct traffic_t {
 #define RWalk2 10;
 #define OffWalk2 11;
 traffic_t FSM[12] = {
-        {"goS", 0x4000101, 2000, {goS, yellowS, goS, yellowS, yellowS, yellowS, yellowS, yellowS}},
-        {"yellowS", 0x4000102, 1000, {allredS, allredS, allredS, allredS, allredS, allredS, allredS, allredS}},
-        {"Walk", 0xC400104, 2000, {RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1}},
-        {"goW", 0x4000044, 2000, {goW, goW, yellowW, yellowW, yellowW, yellowW, yellowW, yellowW}},
-        {"yellowW", 0x40000084, 1000, {allredW, allredW, allredW, allredW, allredW, allredW, allredW, allredW}},
-        {"allredS", 0x4000104, 1000,, {goW, goW, goS, goW, Walk, Walk, Walk, Walk}},
-        {"allredW", 0x4000104, 1000, {goS, goW, goS, goS, Walk, Walk, Walk, goS}},
-        {"allredWalk", 0x4000104, 1000, {goS, goW, goS, goS, Walk, goW, goS, goW}},
-        {"RWalk1", 0x4000104, 500, {OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1}},
-        {"OffWalk1", 0x0000104, 500, {RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2}},
-        {"RWalk2", 0x4000104, 500, {OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2}},
-        {"OffWalk2", 0x0000104, 500 {allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk}}
+        {0x4000101, 2000, {goS, yellowS, goS, yellowS, yellowS, yellowS, yellowS, yellowS}},
+        {0x4000102, 1000, {allredS, allredS, allredS, allredS, allredS, allredS, allredS, allredS}},
+        {0xC400104, 2000, {RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1}},
+        {0x4000044, 2000, {goW, goW, yellowW, yellowW, yellowW, yellowW, yellowW, yellowW}},
+        {0x40000084, 1000, {allredW, allredW, allredW, allredW, allredW, allredW, allredW, allredW}},
+        {0x4000104, 1000, {goW, goW, goS, goW, Walk, Walk, Walk, Walk}},
+        {0x4000104, 1000, {goS, goW, goS, goS, Walk, Walk, Walk, goS}},
+        {0x4000104, 1000, {goS, goW, goS, goS, Walk, goW, goS, goW}},
+        {0x4000104, 500, {OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1}},
+        {0x0000104, 500, {RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2}},
+        {0x4000104, 500, {OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2}},
+        {0x0000104, 500, {allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk}}
 };
 
 // initialize 6 LED outputs and 3 switch inputs
