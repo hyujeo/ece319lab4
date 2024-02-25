@@ -221,12 +221,24 @@ int main5(void){// main5
     SysTick_Init(); // Initialize SysTick for software waits
     Debug_Init();
     // initialize your FSM
+    uint32_t Input;
+    uint32_t index = goS;
+    statePointer = &FSM[index];
     Lab4Grader(1); // activate UART, grader and interrupts
     while(1){
         // 1) output depending on state using Traffic_Out
         // call your Debug_Dump logging your state number and output
+        Traffic_Out(statePointer->output);
+        uint32_t west_output = ((statePointer->output) & (0x000001C0))<<10;
+        uint32_t south_output = ((statePointer->output) & (0x00000007)) << 8;
+        uint32_t walk_output = ((statePointer->output) & (0x0C400000))>>22;
+        Debug_Dump((index<<24) | west_output | south_output | walk_output);
         // 2) wait depending on state
-        // 3) input from switches
+        SysTick_Wait10ms(statePointer->wait);
+        // 3) hard code this so input always shows all switches pressed
+        Input = Traffic_In(); // get input
         // 4) next depends on state and input
+        index = statePointer->next[Input];
+        statePointer = &FSM[index];
     }
 }
