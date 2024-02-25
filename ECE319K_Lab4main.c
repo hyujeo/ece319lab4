@@ -208,7 +208,8 @@ int main(void){// main4
         // 3) hard code this so input always shows all switches pressed
         Input = 7;
         // 4) next depends on state and input
-        statePointer = &FSM[statePointer->next[Input]];
+        index = statePointer->next[Input];
+        statePointer = &FSM[index];
     }
 }
 // use main5 to grade
