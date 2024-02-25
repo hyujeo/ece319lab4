@@ -27,7 +27,7 @@ uint32_t friendlyMask = 0xC4001C7;  // 1's in all the output bits
 
 typedef struct traffic_t {
     uint32_t output;
-    uint32_t wait; // ms
+    uint32_t wait; // *10ms
     uint32_t next[8];
 } traffic_t;
 
@@ -44,19 +44,20 @@ typedef struct traffic_t {
 #define RWalk2 10
 #define OffWalk2 11
 traffic_t FSM[12] = {
-        {0x4000101, 2000, {goS, yellowS, goS, yellowS, yellowS, yellowS, yellowS, yellowS}}, // goS
-        {0x4000102, 1000, {allredS, allredS, allredS, allredS, allredS, allredS, allredS, allredS}}, // yellowS
-        {0xC400104, 2000, {RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1}}, // Walk
-        {0x4000044, 2000, {goW, goW, yellowW, yellowW, yellowW, yellowW, yellowW, yellowW}}, // goW
-        {0x40000084, 1000, {allredW, allredW, allredW, allredW, allredW, allredW, allredW, allredW}}, // yellowW
-        {0x4000104, 1000, {goW, goW, goS, goW, Walk, Walk, Walk, Walk}}, // allredS
-        {0x4000104, 1000, {goS, goW, goS, goS, Walk, Walk, Walk, goS}}, // allredW
-        {0x4000104, 1000, {goS, goW, goS, goS, Walk, goW, goS, goW}}, // allredWalk
-        {0x4000104, 500, {OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1}}, // RWalk1
-        {0x0000104, 500, {RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2}}, // OffWalk1
-        {0x4000104, 500, {OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2}}, // RWalk2
-        {0x0000104, 500, {allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk}} // OffWalk2
+        {0x4000101, 200, {goS, yellowS, goS, yellowS, yellowS, yellowS, yellowS, yellowS}}, // goS
+        {0x4000102, 100, {allredS, allredS, allredS, allredS, allredS, allredS, allredS, allredS}}, // yellowS
+        {0xC400104, 200, {RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1, RWalk1}}, // Walk
+        {0x4000044, 200, {goW, goW, yellowW, yellowW, yellowW, yellowW, yellowW, yellowW}}, // goW
+        {0x4000084, 100, {allredW, allredW, allredW, allredW, allredW, allredW, allredW, allredW}}, // yellowW
+        {0x4000104, 100, {goW, goW, goS, goW, Walk, Walk, Walk, Walk}}, // allredS
+        {0x4000104, 100, {goS, goW, goS, goS, Walk, Walk, Walk, goS}}, // allredW
+        {0x4000104, 100, {goS, goW, goS, goS, Walk, goW, goS, goW}}, // allredWalk
+        {0x4000104, 50, {OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1, OffWalk1}}, // RWalk1
+        {0x0000104, 50, {RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2, RWalk2}}, // OffWalk1
+        {0x4000104, 50, {OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2, OffWalk2}}, // RWalk2
+        {0x0000104, 50, {allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk, allredWalk}} // OffWalk2
 };
+traffic_t *statePointer;
 
 // initialize 6 LED outputs and 3 switch inputs
 // assumes LaunchPad_Init resets and powers A and B
@@ -82,13 +83,14 @@ void Traffic_Init(void){ // assumes LaunchPad_Init resets and powers A and B
 }
 
 /* Activate LEDs
-* Inputs: sensorInput
+* Inputs: high_mask
 * Output: none
 * Feel free to change this. But, if you change the way it works, change the test programs too
 * Be friendly*/
-void Traffic_Out(uint32_t sensorInput){
+void Traffic_Out(uint32_t high_mask){ // walk, south, west
     // write this
-
+    GPIOB->DOUT31_0 = (GPIOB->DOUT31_0) & (~friendlyMask); // being friendly
+    GPIOB->DOUT31_0 = (GPIOB->DOUT31_0) | (high_mask); // set ports
 }
 /* Read sensors
  * Input: none
@@ -103,7 +105,7 @@ uint32_t Traffic_In(void){
 // use main1 to determine Lab4 assignment
 void Lab4Grader(int mode);
 void Grader_Init(void);
-int main(void){ // main1
+int main1(void){ // main1
     Clock_Init80MHz(0);
     LaunchPad_Init();
     Lab4Grader(0); // print assignment, no grading
@@ -128,6 +130,22 @@ int main2(void){ // main2
         //write debug code to test your Traffic_Out
         // Call Traffic_Out testing all LED patterns
         // Lab 3 dump to record output values
+        Traffic_Out(0x00000001);
+        Debug_Dump(0x00000001);
+        Traffic_Out(0x00000002);
+        Debug_Dump(0x00000002);
+        Traffic_Out(0x00000004);
+        Debug_Dump(0x00000004);
+        Traffic_Out(0x00000008);
+        Debug_Dump(0x00000008);
+        Traffic_Out(0x00000010);
+        Debug_Dump(0x00000010);
+        Traffic_Out(0x00000020);
+        Debug_Dump(0x00000020);
+        Traffic_Out(0x04000000);
+        Debug_Dump(0x04000000);
+        Traffic_Out(0x0C400000);
+        Debug_Dump(0x0C400000);
 
         Clock_Delay(40000000); // 0.5s
         if((GPIOB->DOUT31_0&0x20) == 0){
@@ -159,7 +177,7 @@ int main3(void){ // main3
 }
 // use main4 to debug using your dump
 // proving your machine cycles through all states
-int main4(void){// main4
+int main(void){// main4
     uint32_t input;
     Clock_Init80MHz(0);
     LaunchPad_Init();
@@ -174,12 +192,23 @@ int main4(void){// main4
 // initialize your FSM
     SysTick_Init();   // Initialize SysTick for software waits
 
+    uint32_t Input;
+    uint32_t index = goS;
+    statePointer = &FSM[index];
     while(1){
         // 1) output depending on state using Traffic_Out
         // call your Debug_Dump logging your state number and output
+        Traffic_Out(statePointer->output);
+        uint32_t west_output = ((statePointer->output) & (0x000001C0))<<10;
+        uint32_t south_output = ((statePointer->output) & (0x00000007)) << 8;
+        uint32_t walk_output = ((statePointer->output) & (0x0C400000))>>22;
+        Debug_Dump((index<<24) | west_output | south_output | walk_output);
         // 2) wait depending on state
+        SysTick_Wait10ms(statePointer->wait);
         // 3) hard code this so input always shows all switches pressed
+        Input = 7;
         // 4) next depends on state and input
+        statePointer = &FSM[statePointer->next[Input]];
     }
 }
 // use main5 to grade
