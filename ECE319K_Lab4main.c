@@ -101,9 +101,9 @@ void Traffic_Out(uint32_t high_mask){ // walk, south, west
 uint32_t Traffic_In(void){
     // write this
     uint32_t inputs = (GPIOB->DIN31_0 >> 15) & 7; // read PB 17,16,15 into the first three bits of inputs
-    statePointer = &FSM[statePointer->next[inputs]]; // move to the next state based on input
+    //statePointer = &FSM[statePointer->next[inputs]]; // move to the next state based on input
 
-    return statePointer->output; // return the output high_mask specified by the state
+    return inputs; // return the input pins from the sensors
 }
 // use main1 to determine Lab4 assignment
 void Lab4Grader(int mode);
@@ -180,7 +180,7 @@ int main3(void){ // main3
 }
 // use main4 to debug using your dump
 // proving your machine cycles through all states
-int main(void){// main4
+int main4(void){// main4
     uint32_t input;
     Clock_Init80MHz(0);
     LaunchPad_Init();
@@ -216,7 +216,7 @@ int main(void){// main4
     }
 }
 // use main5 to grade
-int main5(void){// main5
+int main(void){// main5
     Clock_Init80MHz(0);
     LaunchPad_Init();
     Grader_Init();  // execute this line before your code
@@ -238,7 +238,7 @@ int main5(void){// main5
         Debug_Dump((index<<24) | west_output | south_output | walk_output);
         // 2) wait depending on state
         SysTick_Wait10ms(statePointer->wait);
-        // 3) hard code this so input always shows all switches pressed
+        // 3) input from switches
         Input = Traffic_In(); // get input
         // 4) next depends on state and input
         index = statePointer->next[Input];
