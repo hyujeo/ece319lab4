@@ -100,7 +100,10 @@ void Traffic_Out(uint32_t high_mask){ // walk, south, west
  */
 uint32_t Traffic_In(void){
     // write this
-    return 42; // replace this line
+    uint32_t inputs = (GPIOB->DIN31_0 >> 15) & 7; // read PB 17,16,15 into the first three bits of inputs
+    statePointer = &FSM[statePointer->next[inputs]]; // move to the next state based on input
+
+    return statePointer->output; // return the output high_mask specified by the state
 }
 // use main1 to determine Lab4 assignment
 void Lab4Grader(int mode);
